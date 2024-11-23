@@ -54,5 +54,3 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 }
-
-
