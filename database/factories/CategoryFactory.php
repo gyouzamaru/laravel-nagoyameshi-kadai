@@ -17,7 +17,9 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'=>'テスト',
+            'name'=>'テスト1',
+            'name'=>'テスト2',
+            'name'=>'テスト3',
         ];
     }
 }
