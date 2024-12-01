@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\TermController;
 use Illuminate\Http\Request;
 
 /*
@@ -33,4 +35,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' =>'auth:admin'
     Route::resource('restaurants', Admin\RestaurantController::class);
 
     Route::resource('categories', Admin\CategoryController::class);
+   
+    Route::resource('company', Admin\CompanyController::class);
+   
+    Route::resource('terms', Admin\TermController::class);
 });
