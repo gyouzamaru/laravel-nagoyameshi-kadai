@@ -40,3 +40,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' =>'auth:admin'
    
     Route::resource('terms', Admin\TermController::class);
 });
+
+Route::group(['middleware' => 'guest:admin'], function () {
+     Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
+

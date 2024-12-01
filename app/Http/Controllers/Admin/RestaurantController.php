@@ -72,10 +72,10 @@ public function store(Request $request) {
 
     $restaurant->save();
 
-    $category_ids = array_filter($request->input('category_ids'));
+    $category_ids = array_filter($request->input('category_ids',[]));
     $restaurant->categories()->sync($category_ids);
 
-    $regular_holiday_ids = array_filter($request->input('regular_holiday_ids'));
+    $regular_holiday_ids = array_filter($request->input('regular_holiday_ids',[]));
     $restaurant->regular_holidays()->sync($regular_holiday_ids);
 
     return redirect()->route('admin.restaurants.index')->with('flash_message','店舗を登録しました。');
@@ -125,10 +125,10 @@ public function update(Request $request, Restaurant $restaurant) {
 
     $restaurant->update();
 
-     $category_ids = array_filter($request->input('category_ids'));
+     $category_ids = array_filter($request->input('category_ids',[]));
      $restaurant->categories()->sync($category_ids);
 
-     $regular_holiday_ids = array_filter($request->input('regular_holiday_ids'));
+     $regular_holiday_ids = array_filter($request->input('regular_holiday_ids',[]));
      $restaurant->regular_holidays()->sync($regular_holiday_ids);
 
     return redirect()->route('admin.restaurants.show',$restaurant)->with('flash_message','店舗を編集しました。');
