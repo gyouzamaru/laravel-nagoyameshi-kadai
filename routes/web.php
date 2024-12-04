@@ -43,5 +43,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' =>'auth:admin'
 
 Route::group(['middleware' => 'guest:admin'], function () {
      Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+  Route::group(['middleware' => ['auth', 'verified']], function() {
+     Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+  });
 });
-
