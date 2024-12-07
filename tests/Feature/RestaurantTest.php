@@ -44,4 +44,40 @@ class RestaurantTest extends TestCase
 
         $response->assertRedirect(route('admin.home'));
    }
+
+// 店舗詳細ページ
+    // 未ログインのユーザーは会員側の店舗詳細ページにアクセスできる
+    public function test_guest_can_access_user_restaurants_show()
+    {
+        $restaurant = Restaurant::factory()->create();
+
+        $response = $this->get(route('restaurants.show',$restaurant));
+
+        $response->assertStatus(200);
+    }
+   // ログイン済みの一般ユーザーは会員側の店舗詳細ページにアクセスできる
+   public function test_user_can_access_user_restaurants_show()
+    {
+        $restaurant = Restaurant::factory()->create();
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('restaurants.show',$restaurant));
+
+        $response->assertStatus(200);
+    }
+   //  ログイン済みの管理者は会員側の店舗詳細ページにアクセスできない
+   public function test_admin_cannot_access_user_restaurants_show()
+    {
+        $restaurant = Restaurant::factory()->create();
+
+        $admin = new Admin();
+        $admin->email = 'admin@example.com';
+        $admin->password = Hash::make('nagoyameshi');
+        $admin->save();
+
+        $response = $this->actingAs($admin, 'admin')->get(route('restaurants.show',$restaurant));
+
+        $response->assertRedirect(route('admin.home'));
+   }
 }
