@@ -67,7 +67,7 @@ public function store(Request $request) {
         $image= $request->file('image')->store('public/restaurants');
         $restaurant->image= basename($image);
     } else {
-        $restaurant->image= basename('');
+        $restaurant->image= '';
     }
 
     $restaurant->save();
