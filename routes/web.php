@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin;
-use App\Http\Controllers\Auth;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\RestaurantController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\TermController;
-use App\Http\Controllers\SubscriptionController;
 use App\Http\Middleware\Subscribed;
 use App\Http\Middleware\NotSubscribed;
+use App\Http\Controllers\Admin;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\TermController;
 use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
@@ -23,44 +23,54 @@ use Illuminate\Http\Request;
 |
 */
 
- Route::get('/', function () {
-  return view('welcome');
- });
+Route::group(['middleware' => 'guest:admin'], function () {
+   Route::get('/', [HomeController::class, 'index'])->name('home');
+
+   Route::resource('restaurants', RestaurantController::class)->only(['index','show']);
+   
+   Route::get('company', [CompanyController::class, 'index'])->name('company.index');
+   
+   Route::get('terms', [TermController::class, 'index'])->name('terms.index');
+
+   
+   Route::group(['middleware' => ['auth', 'verified']], function () {
+     Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+
+   
+   Route::resource('restaurants.reviews', ReviewController::class)->only(['index']);
+
+
+     Route::group(['middleware' => [NotSubscribed::class]], function () {
+         Route::get('subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
+         Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
+     });
+   
+     Route::group(['middleware' => [Subscribed::class]], function () {
+         Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit');
+         Route::patch('subscription', [SubscriptionController::class, 'update'])->name('subscription.update');
+         Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+         Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+     
+         Route::resource('restaurants.reviews', ReviewController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
+      
+       });
+     });
+  });
 
 require __DIR__.'/auth.php';
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' =>'auth:admin'], function () {
-    Route::get('home', [Admin\HomeController::class, 'index'])->name('home');
-    
-    Route::resource('users', Admin\UserController::class)->only(['index', 'show']);
-    
-    Route::resource('restaurants', Admin\RestaurantController::class);
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
 
-    Route::resource('categories', Admin\CategoryController::class);
-   
-    Route::resource('company', Admin\CompanyController::class);
-   
-    Route::resource('terms', Admin\TermController::class);
-});
+   Route::get('home', [Admin\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => 'guest:admin'], function () {
-     Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+   Route::resource('users', Admin\UserController::class)->only(['index', 'show']);
 
-     Route::resource('restaurants', RestaurantController::class)->only(['index', 'show']);
+   Route::resource('restaurants', Admin\RestaurantController::class);
 
-  Route::group(['middleware' => ['auth', 'verified']], function() {
-     Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
-  });
-});
+   Route::resource('categories', Admin\CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
-Route::group(['middleware'=> ['guest:admin', 'auth', 'verified', NotSubscribed::class]], function() {
-   Route::get('subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
-   Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
-});
+   Route::resource('company', Admin\CompanyController::class)->only(['index', 'edit', 'update']);
 
-Route::group(['middleware'=> ['guest:admin', 'auth', 'verified', Subscribed::class]], function() {
-   Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit');
-   Route::patch('subscription', [SubscriptionController::class, 'update'])->name('subscription.update');
-   Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
-   Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+   Route::resource('terms', Admin\TermController::class)->only(['index', 'edit', 'update']);
+
 });

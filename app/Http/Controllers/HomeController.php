@@ -11,7 +11,7 @@ use App\Models\Category;
 class HomeController extends Controller
 {
    public function index() {
-    $highly_rated_restaurants = Restaurant::take(6)->get();
+    $highly_rated_restaurants = Restaurant::withAvg('reviews', 'score')->orderBy('reviews_avg_score', 'desc')->take(6)->get();
 
     $categories = Category::all();
 
