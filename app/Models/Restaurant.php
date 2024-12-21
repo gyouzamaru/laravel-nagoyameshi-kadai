@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
@@ -35,5 +36,9 @@ class Restaurant extends Model
 
     public function popularSortable($query) {
         return $query->withCount('reservations')->orderBy('reservations_count', 'desc');
+    }
+
+    public function users() {
+        return $this->belongsToMany(User::class, 'restaurant_user', 'restaurant_id', 'user_id')->withTimestamps();
     }
 }

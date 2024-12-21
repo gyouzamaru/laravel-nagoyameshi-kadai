@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Restaurant; 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -53,5 +54,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function favorite_restaurants() 
+    {
+        return $this->belongsToMany(Restaurant::class, 'restaurant_user', 'user_id', 'restaurant_id')->withTimestamps();
     }
 }
