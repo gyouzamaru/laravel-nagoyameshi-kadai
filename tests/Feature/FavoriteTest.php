@@ -42,7 +42,7 @@ class FavoriteTest extends TestCase
        $response->assertStatus(200);
     }
    // ログイン済みの管理者は会員側のお気に入り一覧ページにアクセスできない
-   public function test_admin_cannot_access_user__favorite_index()
+   public function test_admin_cannot_access_user_favorite_index()
    {
       $admin = new Admin();
       $admin->email = 'admin@example.com';
