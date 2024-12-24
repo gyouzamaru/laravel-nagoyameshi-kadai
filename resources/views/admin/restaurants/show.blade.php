@@ -47,7 +47,7 @@
 
                 <div class="mb-2">
                     @if ($restaurant->image !== '')
-                        <img src="{{ asset('storage/app/public/restaurants/' . $restaurant->image) }}" class="w-100">
+                        <img src="{{ asset('storage/restaurants/' . $restaurant->image) }}" class="w-100">
                     @else
                         <img src="{{ asset('/images/no_image.jpg') }}" class="w-100">
                     @endif
@@ -126,55 +126,11 @@
 
                     <div class="row pb-2 mb-2 border-bottom">
                         <div class="col-2">
-                            <span class="fw-bold">定休日</span>
-                        </div>
-
-                        <div class="col d-flex">
-                            @if ($restaurant->regular_holidays()->exists())
-                                @foreach ($restaurant->regular_holidays()->orderBy('regular_holiday_id', 'asc')->get() as $index => $regular_holiday)
-                                    <div>
-                                        @if ($index === 0)
-                                            {{ $regular_holiday->day }}
-                                        @else
-                                            {{ '、' . $regular_holiday->day }}
-                                        @endif
-                                    </div>
-                                @endforeach
-                            @else
-                                <span>年中無休</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="row pb-2 mb-2 border-bottom">
-                        <div class="col-2">
                             <span class="fw-bold">座席数</span>
                         </div>
 
                         <div class="col">
                             <span>{{ number_format($restaurant->seating_capacity) }}席</span>
-                        </div>
-                    </div>
-
-                    <div class="row pb-2 mb-2 border-bottom">
-                        <div class="col-2">
-                            <span class="fw-bold">カテゴリ</span>
-                        </div>
-
-                        <div class="col d-flex">
-                            @if ($restaurant->categories()->exists())
-                                @foreach ($restaurant->categories as $index => $category)
-                                    <div>
-                                        @if ($index === 0)
-                                            {{ $category->name }}
-                                        @else
-                                            {{ '、' . $category->name }}
-                                        @endif
-                                    </div>
-                                @endforeach
-                            @else
-                                <span>未設定</span>
-                            @endif
                         </div>
                     </div>
                 </div>

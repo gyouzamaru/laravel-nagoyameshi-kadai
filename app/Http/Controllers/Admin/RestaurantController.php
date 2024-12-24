@@ -140,10 +140,3 @@ public function destroy(Restaurant $restaurant) {
     return redirect()->route('admin.restaurants.index')->with('flash_message', '店舗を削除しました。');
     }
 }
-
-
-
-  
-
-
-
